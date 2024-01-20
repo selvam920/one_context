@@ -161,7 +161,7 @@ mixin DialogController {
   }
 
   /// Shows a persistent bottom sheet
-  Future<PersistentBottomSheetController<T>?> showBottomSheet<T>({
+  Future<PersistentBottomSheetController?> showBottomSheet<T>({
     required Widget Function(BuildContext) builder,
     Color? backgroundColor,
     double? elevation,
