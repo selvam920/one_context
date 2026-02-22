@@ -40,7 +40,8 @@ class OneThemeController {
 
   void changeThemeData(ThemeData themeData, {BuildContext? buildContext}) {
     _themeData = themeData;
-    OneContext().oneNotifier.notify(buildContext ?? OneContext().context,
+    OneContext().oneNotifier.notify<OneThemeChangerEvent>(
+        buildContext ?? OneContext().context,
         NotificationPayload(data: OneThemeChangerEvent()));
   }
 
@@ -65,7 +66,7 @@ class OneThemeController {
       : Future.value(_defaultMode);
 
   static ThemeMode initThemeMode(ThemeMode themeMode) {
-    return _themeMode ??= _defaultMode;
+    return _themeMode ??= themeMode;
   }
 
   bool get isDark => _themeMode == ThemeMode.dark;

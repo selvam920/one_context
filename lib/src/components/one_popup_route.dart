@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DialogRoute extends PopupRoute {
-  DialogRoute({
+class OnePopupRoute extends PopupRoute {
+  OnePopupRoute({
     this.barrierColor,
     this.barrierLabel,
     this.builder,

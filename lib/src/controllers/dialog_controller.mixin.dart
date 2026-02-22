@@ -189,10 +189,21 @@ mixin DialogController {
   }
 
   /// Pop the top-most dialog off the OneContext.dialog.
+  ///
+  /// Uses smart navigator selection: if the inner navigator can pop
+  /// (e.g. a modal bottom sheet), it pops from there. Otherwise, it pops
+  /// from the root navigator (e.g. a dialog shown with useRootNavigator: true).
   popDialog<T extends Object>([T? result]) async {
     if ((await _scaffoldContextLoaded())) {
-      if (OneContext().hasDialogVisible)
-        return Navigator.of(_scaffoldContext!).pop<T>(result);
+      if (OneContext().hasDialogVisible) {
+        final innerNav = Navigator.of(_scaffoldContext!);
+        if (innerNav.canPop()) {
+          return innerNav.pop<T>(result);
+        } else {
+          return Navigator.of(_scaffoldContext!, rootNavigator: true)
+              .pop<T>(result);
+        }
+      }
     }
   }
 

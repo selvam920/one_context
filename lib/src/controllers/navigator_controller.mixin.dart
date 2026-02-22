@@ -59,12 +59,26 @@ mixin NavigatorController {
   NavigatorState navigatorOf({required bool rootNavigator}) =>
       Navigator.of(context!, rootNavigator: rootNavigator);
 
+  /// Returns the inner navigator (Nav-Inner) if a dialog is visible,
+  /// so that pushed pages appear in front of the dialog.
+  /// Otherwise returns the app navigator (Nav-App).
+  NavigatorState? get _activeNav {
+    if (OneContext().hasDialogVisible) {
+      final scaffoldContext = OneContext().scaffoldKey.currentContext;
+      if (scaffoldContext != null && scaffoldContext.mounted) {
+        return Navigator.of(scaffoldContext);
+      }
+    }
+    return _nav;
+  }
+
   ///  Push the given route onto the navigator.
-  Future<T?> push<T extends Object?>(Route<T> route) => _nav!.push<T>(route);
+  Future<T?> push<T extends Object?>(Route<T> route) =>
+      _activeNav!.push<T>(route);
 
   ///  Show general dialog.
   Future<T?> showGeneralDialog<T extends Object?>(Widget page) =>
-      _nav!.push<T>(DialogRoute(
+      _activeNav!.push<T>(DialogRoute(
         context: context!,
         builder: (BuildContext context) {
           return page;
@@ -72,15 +86,14 @@ mixin NavigatorController {
       ));
 
   /// Whether the navigator can be popped.
-  bool canPop() => _nav!.canPop();
+  bool canPop() => _activeNav!.canPop();
 
-  /// Tries to pop the current route, while honoring the route's [Route.willPop]
-  /// state.
+  /// Tries to pop the current route.
   Future<bool> maybePop<T extends Object?>([T? result]) async =>
-      _nav!.maybePop<T>(result);
+      _activeNav!.maybePop<T>(result);
 
   /// Pop the top-most route off the navigator.
-  void pop<T extends Object?>([T? result]) => _nav!.pop<T>(result);
+  void pop<T extends Object?>([T? result]) => _activeNav!.pop<T>(result);
 
   /// Pop the current route off the navigator and push a named route in its
   /// place.
@@ -88,7 +101,7 @@ mixin NavigatorController {
           String routeName,
           {TO? result,
           Object? arguments}) =>
-      _nav!.popAndPushNamed<T, TO>(routeName,
+      _activeNav!.popAndPushNamed<T, TO>(routeName,
           result: result, arguments: arguments);
 
   /// Calls [pop] repeatedly until the predicate returns true.
@@ -96,7 +109,7 @@ mixin NavigatorController {
   /// The predicate may be applied to the same route more than once if [Route.willHandlePopInternally] is true.
   ///
   /// To pop until a route with a certain name, use the [RoutePredicate] returned from [ModalRoute.withName].
-  void popUntil(RoutePredicate predicate) => _nav!.popUntil(predicate);
+  void popUntil(RoutePredicate predicate) => _activeNav!.popUntil(predicate);
 
   /// Push the given route onto the navigator, and then remove all the previous
   /// routes until the `predicate` returns true.

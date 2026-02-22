@@ -50,13 +50,13 @@ class MyApp extends StatelessWidget {
                 // Configure reactive theme mode and theme data (needs OneNotification above in the widget tree)
                 themeMode: OneThemeController.initThemeMode(ThemeMode.light),
                 theme: OneThemeController.initThemeData(ThemeData(
-                  primarySwatch: Colors.green,
-                  primaryColor: Colors.green,
+                  colorSchemeSeed: Colors.green,
                   brightness: Brightness.light,
                   useMaterial3: true,
                 )),
                 darkTheme: OneThemeController.initDarkThemeData(ThemeData(
-                    brightness: Brightness.dark, primaryColor: Colors.blue)),
+                    colorSchemeSeed: Colors.blue,
+                    brightness: Brightness.dark)),
 
                 // Configure Navigator key
                 navigatorKey: OneContext().key,
@@ -185,15 +185,15 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
               widget.title + ' - ' + debugShowCheckedModeBanner.toString()),
           actions: <Widget>[
             Switch(
-                activeColor: Colors.blue,
+                activeThumbColor: Colors.blue,
                 value: debugShowCheckedModeBanner,
                 onChanged: (_) {
                   debugShowCheckedModeBanner = !debugShowCheckedModeBanner;
@@ -249,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage>
                   child: Text('Change ThemeData Light'),
                   onPressed: () {
                     OneContext().oneTheme.changeThemeData(ThemeData(
-                        primarySwatch: Colors.purple,
+                        colorSchemeSeed: Colors.purple,
                         brightness: Brightness.light));
                   },
                 ),
@@ -257,7 +257,7 @@ class _MyHomePageState extends State<MyHomePage>
                   child: Text('Change ThemeData Dark'),
                   onPressed: () {
                     OneContext().oneTheme.changeDarkThemeData(ThemeData(
-                        primarySwatch: Colors.amber,
+                        colorSchemeSeed: Colors.amber,
                         brightness: Brightness.dark));
                   },
                 ),
@@ -307,7 +307,7 @@ class _MyHomePageState extends State<MyHomePage>
                     showTipsOnScreen('OneContext().showDialog<String>()');
 
                     var result = await OneContext().showDialog<String>(
-                        barrierColor: Colors.purple.withOpacity(0.5),
+                        barrierColor: Colors.purple.withValues(alpha: 0.5),
                         builder: (context) => AlertDialog(
                               title: new Text("The Title"),
                               content: new Text("The Body"),
@@ -319,6 +319,36 @@ class _MyHomePageState extends State<MyHomePage>
                                           .push<String>(MaterialPageRoute(
                                               builder: (_) => SecondPage()));
                                       print('$result from OneContext().push()');
+                                    }),
+                                new TextButton(
+                                    child: new Text("Inner Dialog"),
+                                    onPressed: () async {
+                                      var innerResult =
+                                          await OneContext().showDialog<String>(
+                                        builder: (ctx) => AlertDialog(
+                                          title: Text("Inner Dialog"),
+                                          content:
+                                              Text("Pick an option:"),
+                                          actions: [
+                                            TextButton(
+                                              child: Text("Option A"),
+                                              onPressed: () =>
+                                                  OneContext().popDialog('A'),
+                                            ),
+                                            TextButton(
+                                              child: Text("Option B"),
+                                              onPressed: () =>
+                                                  OneContext().popDialog('B'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      OneContext().showSnackBar(
+                                        builder: (_) => SnackBar(
+                                          content: Text(
+                                              'Inner dialog result: $innerResult'),
+                                        ),
+                                      );
                                     }),
                                 new TextButton(
                                     child: new Text("OK"),
@@ -340,7 +370,7 @@ class _MyHomePageState extends State<MyHomePage>
                         'OneContext().showModalBottomSheet<String>()');
                     var result =
                         await OneContext().showModalBottomSheet<String>(
-                      barrierColor: Colors.amber.withOpacity(0.5),
+                      barrierColor: Colors.amber.withValues(alpha: 0.5),
                       builder: (context) => Container(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -442,7 +472,7 @@ class _MyHomePageState extends State<MyHomePage>
                     showTipsOnScreen(
                         'OneContext().showProgressIndicator(backgroundColor, circularProgressIndicatorColor)');
                     OneContext().showProgressIndicator(
-                        backgroundColor: Colors.blue.withOpacity(.3),
+                        backgroundColor: Colors.blue.withValues(alpha: 0.3),
                         circularProgressIndicatorColor: Colors.red);
                     Future.delayed(Duration(seconds: 2),
                         () => OneContext().hideProgressIndicator());
@@ -525,9 +555,9 @@ class _MyHomePageState extends State<MyHomePage>
                         ),
                         style: ButtonStyle(
                           backgroundColor:
-                              MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.pressed))
+                              WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
+                              if (states.contains(WidgetState.pressed))
                                 return Colors.green;
                               return Colors
                                   .blue; // Use the component's default.

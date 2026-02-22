@@ -6,8 +6,28 @@ import 'package:one_context/src/controllers/overlay_controller.mixin.dart';
 
 import '../../one_context.dart';
 
+class _OneContextBackObserver extends WidgetsBindingObserver {
+  @override
+  Future<bool> didPopRoute() async {
+    if (OneContext().hasDialogVisible) {
+      final scaffoldContext = OneContext().scaffoldKey.currentContext;
+      if (scaffoldContext != null && scaffoldContext.mounted) {
+        final innerNav = Navigator.of(scaffoldContext);
+        if (innerNav.canPop()) {
+          innerNav.pop();
+        } else {
+          Navigator.of(scaffoldContext, rootNavigator: true).pop();
+        }
+      }
+      return true;
+    }
+    return false;
+  }
+}
+
 class OneContext with NavigatorController, OverlayController, DialogController {
   static BuildContext? _context;
+  static _OneContextBackObserver? _backObserver;
 
   /// The almost top root context of the app,
   /// use it carefully or don't use it directly!
@@ -53,6 +73,15 @@ class OneContext with NavigatorController, OverlayController, DialogController {
   OneContext._private() {
     oneNotifier = OneNotificationController();
     oneTheme = OneThemeController();
+    _ensureBackObserver();
+  }
+
+  static void _ensureBackObserver() {
+    if (_backObserver == null) {
+      WidgetsFlutterBinding.ensureInitialized();
+      _backObserver = _OneContextBackObserver();
+      WidgetsBinding.instance.addObserver(_backObserver!);
+    }
   }
 
   static OneContext instance = OneContext._private();
