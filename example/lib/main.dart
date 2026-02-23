@@ -645,8 +645,9 @@ class _MyHomePageState extends State<MyHomePage>
                 ElevatedButton(
                   child: Text('Show DatePicker'),
                   onPressed: () async {
-                    showTipsOnScreen('OneContext().showDatePicker()');
-                    final picked = await OneContext().showDatePicker(
+                    showTipsOnScreen('showDatePicker()');
+                    final picked = await showDatePicker(
+                      context: context,
                       initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),

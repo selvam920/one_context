@@ -23,7 +23,17 @@ class _OneContextBackObserver extends WidgetsBindingObserver {
       }
     }
 
-    // 2. No dialog visible - forward to the Root Navigator directly.
+    // 2. Check if Nav-Inner has any untracked routes to pop
+    //    (e.g. standard Flutter showDatePicker, showDialog called directly)
+    final scaffoldContext = OneContext().scaffoldKey.currentContext;
+    if (scaffoldContext != null && scaffoldContext.mounted) {
+      final innerNav = Navigator.of(scaffoldContext);
+      if (innerNav.canPop()) {
+        return await innerNav.maybePop();
+      }
+    }
+
+    // 3. No dialog on Nav-Inner - forward to Nav-App (Root Navigator)
     //    This triggers PopScope.onPopInvokedWithResult if present on the current route.
     final rootNav = OneContext().key.currentState;
     if (rootNav != null) {
