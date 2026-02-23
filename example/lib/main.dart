@@ -628,6 +628,15 @@ class _MyHomePageState extends State<MyHomePage>
                   },
                 ),
                 ElevatedButton(
+                  child: Text('Push Dialog Page (push)'),
+                  onPressed: () async {
+                    showTipsOnScreen('OneContext().push(...)');
+                    String? result = await OneContext().push<String>(
+                        MaterialPageRoute(builder: (_) => DialogPage()));
+                    print('$result from OneContext().push()');
+                  },
+                ),
+                ElevatedButton(
                   child: Text('Show MediaQuery info'),
                   onPressed: () async {
                     MediaQueryData mediaQuery = OneContext().mediaQuery;
@@ -731,3 +740,60 @@ void showTipsOnScreen(String text, {double? size, int? seconds}) {
   Future.delayed(
       Duration(seconds: seconds ?? 2), () => OneContext().removeOverlay(id));
 }
+
+class DialogPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(title: Text('Dialog Page')),
+      body: Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text('New Page with Dialog'),
+          ElevatedButton(
+            child: Text('Show Dialog'),
+            onPressed: () {
+              OneContext().showDialog(
+                builder: (context) => AlertDialog(
+                  title: Text('Dialog Page Dialog'),
+                  content: Text('Wait, this is Awesome!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => OneContext().popDialog(),
+                      child: Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          ElevatedButton(
+            child: Text('Show DatePicker'),
+            onPressed: () async {
+              showTipsOnScreen('showDatePicker()');
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              if (picked != null) {
+                OneContext().showSnackBar(
+                  builder: (_) => SnackBar(
+                    content: Text(
+                        'Selected date: ${picked.toLocal().toString().split(' ')[0]}'),
+                  ),
+                );
+              }
+            },
+          ),
+          ElevatedButton(
+            child: Text('Go Back'),
+            onPressed: () {
+              OneContext().pop();
+            },
+          ),
+        ],
+      )));
+}
+
