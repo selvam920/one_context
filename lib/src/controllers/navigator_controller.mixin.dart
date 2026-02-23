@@ -59,14 +59,16 @@ mixin NavigatorController {
   NavigatorState navigatorOf({required bool rootNavigator}) =>
       Navigator.of(context!, rootNavigator: rootNavigator);
 
-  /// Returns the inner navigator (Nav-Inner) if a dialog/route is open there (tracked by OneContext),
+  /// Returns the inner navigator (Nav-Inner) if a dialog/route is open there,
   /// so that pushed pages or pops appear in front of the content.
+  /// Detects both OneContext-tracked dialogs and native Flutter dialogs/sheets.
   /// Otherwise returns the app navigator (Nav-App).
   NavigatorState? get _activeNav {
-    if (OneContext().hasDialogVisible) {
-      final scaffoldContext = OneContext().scaffoldKey.currentContext;
-      if (scaffoldContext != null && scaffoldContext.mounted) {
-        return Navigator.of(scaffoldContext);
+    final scaffoldContext = OneContext().scaffoldKey.currentContext;
+    if (scaffoldContext != null && scaffoldContext.mounted) {
+      final innerNav = Navigator.of(scaffoldContext);
+      if (innerNav.canPop()) {
+        return innerNav;
       }
     }
     return _nav;
@@ -89,12 +91,14 @@ mixin NavigatorController {
   bool canPop() => _activeNav!.canPop();
 
   /// Tries to pop the current route, checking dialogs first then the Root Navigator.
+  /// Detects both OneContext-tracked and native Flutter dialogs/sheets on Nav-Inner.
   Future<bool> maybePop<T extends Object?>([T? result]) async {
-    // 1. If a tracked dialog is visible, try to pop from Net-Inner
-    if (OneContext().hasDialogVisible) {
-      final scaffoldContext = OneContext().scaffoldKey.currentContext;
-      if (scaffoldContext != null && scaffoldContext.mounted) {
-        return await Navigator.of(scaffoldContext).maybePop<T>(result);
+    // 1. If Nav-Inner has any routes to pop (tracked or native dialogs/sheets)
+    final scaffoldContext = OneContext().scaffoldKey.currentContext;
+    if (scaffoldContext != null && scaffoldContext.mounted) {
+      final innerNav = Navigator.of(scaffoldContext);
+      if (innerNav.canPop()) {
+        return await innerNav.maybePop<T>(result);
       }
     }
 
