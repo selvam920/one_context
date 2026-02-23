@@ -110,6 +110,181 @@ mixin DialogController {
         .showSnackBar(builder(_scaffoldContext));
   }
 
+  /// Displays a Material date picker above the current contents of the app.
+  Future<DateTime?> showDatePicker({
+    required DateTime initialDate,
+    required DateTime firstDate,
+    required DateTime lastDate,
+    DateTime? currentDate,
+    DatePickerEntryMode initialEntryMode = DatePickerEntryMode.calendar,
+    SelectableDayPredicate? selectableDayPredicate,
+    String? helpText,
+    String? cancelText,
+    String? confirmText,
+    Locale? locale,
+    bool useRootNavigator = true,
+    RouteSettings? routeSettings,
+    TextDirection? textDirection,
+    TransitionBuilder? builder,
+    DatePickerMode initialDatePickerMode = DatePickerMode.day,
+    String? errorFormatText,
+    String? errorInvalidText,
+    String? fieldHintText,
+    String? fieldLabelText,
+    TextInputType? keyboardType,
+    Offset? anchorPoint,
+    final Color? barrierColor,
+    final String? barrierLabel,
+    final bool barrierDismissible = true,
+  }) async {
+    if (!(await _scaffoldContextLoaded())) return null;
+
+    Widget dialog = Container();
+    addDialogVisible(dialog);
+
+    return mat
+        .showDatePicker(
+          context: _scaffoldContext!,
+          initialDate: initialDate,
+          firstDate: firstDate,
+          lastDate: lastDate,
+          currentDate: currentDate,
+          initialEntryMode: initialEntryMode,
+          selectableDayPredicate: selectableDayPredicate,
+          helpText: helpText,
+          cancelText: cancelText,
+          confirmText: confirmText,
+          locale: locale,
+          useRootNavigator: useRootNavigator,
+          routeSettings: routeSettings,
+          textDirection: textDirection,
+          builder: builder,
+          initialDatePickerMode: initialDatePickerMode,
+          errorFormatText: errorFormatText,
+          errorInvalidText: errorInvalidText,
+          fieldHintText: fieldHintText,
+          fieldLabelText: fieldLabelText,
+          keyboardType: keyboardType,
+          anchorPoint: anchorPoint,
+          barrierColor: barrierColor,
+          barrierLabel: barrierLabel,
+          barrierDismissible: barrierDismissible,
+        )
+        .whenComplete(() => removeDialogVisible(widget: dialog));
+  }
+
+  /// Displays a Material time picker above the current contents of the app.
+  Future<TimeOfDay?> showTimePicker({
+    required TimeOfDay initialTime,
+    TransitionBuilder? builder,
+    bool useRootNavigator = true,
+    RouteSettings? routeSettings,
+    TimePickerEntryMode initialEntryMode = TimePickerEntryMode.dial,
+    String? cancelText,
+    String? confirmText,
+    String? helpText,
+    String? errorInvalidText,
+    String? hourLabelText,
+    String? minuteLabelText,
+    Offset? anchorPoint,
+    EntryModeChangeCallback? onEntryModeChanged,
+    final Color? barrierColor,
+    final String? barrierLabel,
+    final bool barrierDismissible = true,
+  }) async {
+    if (!(await _scaffoldContextLoaded())) return null;
+
+    Widget dialog = Container();
+    addDialogVisible(dialog);
+
+    return mat
+        .showTimePicker(
+          context: _scaffoldContext!,
+          initialTime: initialTime,
+          builder: builder,
+          useRootNavigator: useRootNavigator,
+          routeSettings: routeSettings,
+          initialEntryMode: initialEntryMode,
+          cancelText: cancelText,
+          confirmText: confirmText,
+          helpText: helpText,
+          errorInvalidText: errorInvalidText,
+          hourLabelText: hourLabelText,
+          minuteLabelText: minuteLabelText,
+          anchorPoint: anchorPoint,
+          onEntryModeChanged: onEntryModeChanged,
+          barrierColor: barrierColor,
+          barrierLabel: barrierLabel,
+          barrierDismissible: barrierDismissible,
+        )
+        .whenComplete(() => removeDialogVisible(widget: dialog));
+  }
+
+  /// Displays a Material date range picker above the current contents of the app.
+  Future<DateTimeRange?> showDateRangePicker({
+    DateTimeRange? initialDateRange,
+    required DateTime firstDate,
+    required DateTime lastDate,
+    DateTime? currentDate,
+    DatePickerEntryMode initialEntryMode = DatePickerEntryMode.calendar,
+    String? helpText,
+    String? cancelText,
+    String? confirmText,
+    String? saveText,
+    String? errorInvalidRangeText,
+    String? errorFormatText,
+    String? errorInvalidText,
+    String? fieldStartHintText,
+    String? fieldEndHintText,
+    String? fieldStartLabelText,
+    String? fieldEndLabelText,
+    Locale? locale,
+    bool useRootNavigator = true,
+    RouteSettings? routeSettings,
+    TextDirection? textDirection,
+    TransitionBuilder? builder,
+    Offset? anchorPoint,
+    final Color? barrierColor,
+    final String? barrierLabel,
+    final bool barrierDismissible = true,
+  }) async {
+    if (!(await _scaffoldContextLoaded())) return null;
+
+    Widget dialog = Container();
+    addDialogVisible(dialog);
+
+    return mat
+        .showDateRangePicker(
+          context: _scaffoldContext!,
+          initialDateRange: initialDateRange,
+          firstDate: firstDate,
+          lastDate: lastDate,
+          currentDate: currentDate,
+          initialEntryMode: initialEntryMode,
+          helpText: helpText,
+          cancelText: cancelText,
+          confirmText: confirmText,
+          saveText: saveText,
+          errorInvalidRangeText: errorInvalidRangeText,
+          errorFormatText: errorFormatText,
+          errorInvalidText: errorInvalidText,
+          fieldStartHintText: fieldStartHintText,
+          fieldEndHintText: fieldEndHintText,
+          fieldStartLabelText: fieldStartLabelText,
+          fieldEndLabelText: fieldEndLabelText,
+          locale: locale,
+          useRootNavigator: useRootNavigator,
+          routeSettings: routeSettings,
+          textDirection: textDirection,
+          builder: builder,
+          anchorPoint: anchorPoint,
+          barrierColor: barrierColor,
+          barrierLabel: barrierLabel,
+          barrierDismissible: barrierDismissible,
+        )
+        .whenComplete(() => removeDialogVisible(widget: dialog));
+  }
+
   /// Shows a modal material design bottom sheet.
   ///
   /// A modal bottom sheet is an alternative to a menu or a dialog and prevents

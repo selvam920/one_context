@@ -9,6 +9,7 @@ import '../../one_context.dart';
 class _OneContextBackObserver extends WidgetsBindingObserver {
   @override
   Future<bool> didPopRoute() async {
+    // 1. If any OneContext-tracked dialog is visible, pop it from Nav-Inner
     if (OneContext().hasDialogVisible) {
       final scaffoldContext = OneContext().scaffoldKey.currentContext;
       if (scaffoldContext != null && scaffoldContext.mounted) {
@@ -18,9 +19,17 @@ class _OneContextBackObserver extends WidgetsBindingObserver {
         } else {
           Navigator.of(scaffoldContext, rootNavigator: true).pop();
         }
+        return true;
       }
-      return true;
     }
+
+    // 2. No dialog visible - forward to the Root Navigator directly.
+    //    This triggers PopScope.onPopInvokedWithResult if present on the current route.
+    final rootNav = OneContext().key.currentState;
+    if (rootNav != null) {
+      return await rootNav.maybePop();
+    }
+
     return false;
   }
 }

@@ -59,8 +59,8 @@ mixin NavigatorController {
   NavigatorState navigatorOf({required bool rootNavigator}) =>
       Navigator.of(context!, rootNavigator: rootNavigator);
 
-  /// Returns the inner navigator (Nav-Inner) if a dialog is visible,
-  /// so that pushed pages appear in front of the dialog.
+  /// Returns the inner navigator (Nav-Inner) if a dialog/route is open there (tracked by OneContext),
+  /// so that pushed pages or pops appear in front of the content.
   /// Otherwise returns the app navigator (Nav-App).
   NavigatorState? get _activeNav {
     if (OneContext().hasDialogVisible) {
@@ -88,9 +88,24 @@ mixin NavigatorController {
   /// Whether the navigator can be popped.
   bool canPop() => _activeNav!.canPop();
 
-  /// Tries to pop the current route.
-  Future<bool> maybePop<T extends Object?>([T? result]) async =>
-      _activeNav!.maybePop<T>(result);
+  /// Tries to pop the current route, checking dialogs first then the Root Navigator.
+  Future<bool> maybePop<T extends Object?>([T? result]) async {
+    // 1. If a tracked dialog is visible, try to pop from Net-Inner
+    if (OneContext().hasDialogVisible) {
+      final scaffoldContext = OneContext().scaffoldKey.currentContext;
+      if (scaffoldContext != null && scaffoldContext.mounted) {
+        return await Navigator.of(scaffoldContext).maybePop<T>(result);
+      }
+    }
+
+    // 2. No dialog - forward to the Root Navigator (triggers PopScope if present)
+    final rootNav = key.currentState;
+    if (rootNav != null) {
+      return await rootNav.maybePop<T>(result);
+    }
+
+    return false;
+  }
 
   /// Pop the top-most route off the navigator.
   void pop<T extends Object?>([T? result]) => _activeNav!.pop<T>(result);

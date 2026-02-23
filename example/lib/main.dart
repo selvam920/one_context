@@ -187,6 +187,33 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        print('Back button pressed! didPop: $didPop, result: $result');
+        if (didPop) return;
+
+        final bool? shouldPop = await OneContext().showDialog<bool>(
+          builder: (context) => AlertDialog(
+            title: Text('Confirmation'),
+            content: Text('Do you really want to exit?'),
+            actions: [
+              TextButton(
+                onPressed: () => OneContext().popDialog(false),
+                child: Text('No'),
+              ),
+              TextButton(
+                onPressed: () => OneContext().popDialog(true),
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldPop == true) {
+          // If the user selects "Yes," we can now use the standard pop since _activeNav
+          // will correctly fall back to the root navigator when no dialog is visible.
+          OneContext().pop();
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -613,6 +640,24 @@ class _MyHomePageState extends State<MyHomePage>
                         'textScaleFactor: ${mediaQuery.textScaler}';
                     print(info);
                     showTipsOnScreen(info, size: 200, seconds: 5);
+                  },
+                ),
+                ElevatedButton(
+                  child: Text('Show DatePicker'),
+                  onPressed: () async {
+                    showTipsOnScreen('OneContext().showDatePicker()');
+                    final picked = await OneContext().showDatePicker(
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+                    if (picked != null) {
+                      OneContext().showSnackBar(
+                        builder: (_) => SnackBar(
+                          content: Text('Selected date: ${picked.toLocal().toString().split(' ')[0]}'),
+                        ),
+                      );
+                    }
                   },
                 ),
                 ElevatedButton(

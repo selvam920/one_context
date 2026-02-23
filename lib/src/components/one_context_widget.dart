@@ -25,10 +25,19 @@ class _OneContextWidgetState extends State<OneContextWidget> {
       initialRoute: widget.initialRoute ?? '/',
       observers: [...widget.observers, OneContext().heroController],
       onGenerateRoute: (_) => MaterialPageRoute(
-          builder: (context) => Scaffold(
-                resizeToAvoidBottomInset: false,
-                key: OneContext().scaffoldKey,
-                body: widget.child!,
+          builder: (context) => PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, result) {
+                  // Handled by _OneContextBackObserver — do nothing here.
+                  // This PopScope exists solely to keep
+                  // SystemNavigator.setFrameworkHandlesBack(true)
+                  // so that didPopRoute() is always called on Android.
+                },
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  key: OneContext().scaffoldKey,
+                  body: widget.child!,
+                ),
               )),
     );
   }
