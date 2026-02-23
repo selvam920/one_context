@@ -61,6 +61,9 @@ class MyApp extends StatelessWidget {
                 // Configure Navigator key
                 navigatorKey: OneContext().key,
 
+                // Configure navigator observers for proper back gesture handling
+                navigatorObservers: [OneContext().navAppObserver],
+
                 // Configure [OneContext] to dialogs, overlays, snackbars, and ThemeMode
                 builder: OneContext().builder,
 
@@ -104,7 +107,8 @@ class MyApp2 extends StatelessWidget {
         home: MyHomePage2(title: 'A NEW APPLICATION'),
         routes: {'/second': (context) => SecondPage()},
         builder: OneContext().builder,
-        navigatorKey: OneContext().key);
+        navigatorKey: OneContext().key,
+        navigatorObservers: [OneContext().navAppObserver]);
   }
 }
 

@@ -23,7 +23,7 @@ class _OneContextWidgetState extends State<OneContextWidget> {
   Widget build(BuildContext context) {
     return Navigator(
       initialRoute: widget.initialRoute ?? '/',
-      observers: [...widget.observers, OneContext().heroController],
+      observers: [...widget.observers, OneContext().heroController, OneContext().innerObserver],
       onGenerateRoute: (_) => MaterialPageRoute(
           builder: (context) => PopScope(
                 canPop: false,

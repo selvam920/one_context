@@ -24,12 +24,16 @@
 ```dart
 /// important: Use [OneContext().builder] in `MaterialApp` builder, in order to show dialogs and overlays.
 /// important: Use [OneContext().key] in `MaterialApp` navigatorKey, in order to navigate.
+/// important: Use [OneContext().navAppObserver] in `MaterialApp` navigatorObservers, for proper back gesture handling on Android.
 return MaterialApp(
     builder: OneContext().builder,
     navigatorKey: OneContext().key,
+    navigatorObservers: [OneContext().navAppObserver],
     ...
 );
 ```
+
+> **Note:** Adding `navigatorObservers: [OneContext().navAppObserver]` is required for Android devices that use gesture navigation (swipe from edge). Without it, swiping back while a dialog or date picker is open on a pushed page will close the page instead of the dialog.
 
 #### There are 2 ways to get OneContext singleton instance, OneContext() or OnceContext.intance. e.g.
 ```dart
@@ -208,6 +212,7 @@ OneNotification<OneThemeChangerEvent>(
   builder: (_, __) {
     return MaterialApp(
       builder: OneContext().builder,
+      navigatorObservers: [OneContext().navAppObserver],
       themeMode: OneThemeController.initThemeMode(ThemeMode.light),
       theme: OneThemeController.initThemeData(ThemeData(brightness: Brightness.light)),
       darkTheme: OneThemeController.initDarkThemeData(ThemeData(brightness: Brightness.dark)),
