@@ -55,8 +55,7 @@ class MyApp extends StatelessWidget {
                   useMaterial3: true,
                 )),
                 darkTheme: OneThemeController.initDarkThemeData(ThemeData(
-                    colorSchemeSeed: Colors.blue,
-                    brightness: Brightness.dark)),
+                    colorSchemeSeed: Colors.blue, brightness: Brightness.dark)),
 
                 // Configure Navigator key
                 navigatorKey: OneContext().key,
@@ -154,7 +153,6 @@ class _MyHomePage2State extends State<MyHomePage2> {
   }
 }
 
-
 class DemoSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -172,11 +170,17 @@ class DemoSection extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 24),
       elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Theme.of(context)
+          .colorScheme
+          .surfaceContainerHighest
+          .withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5),
+          color: Theme.of(context)
+              .colorScheme
+              .outlineVariant
+              .withValues(alpha: 0.5),
         ),
       ),
       child: Padding(
@@ -472,7 +476,8 @@ class _MyHomePageState extends State<MyHomePage>
                       showTipsOnScreen('OneContext().showDialog<String>()');
 
                       var result = await OneContext().showDialog<String>(
-                          barrierColor: Colors.deepPurple.withValues(alpha: 0.3),
+                          barrierColor:
+                              Colors.deepPurple.withValues(alpha: 0.3),
                           builder: (context) => AlertDialog(
                                 title: const Text("App Dialog"),
                                 content: const Text(
@@ -546,7 +551,8 @@ class _MyHomePageState extends State<MyHomePage>
                                   onTap: () {
                                     OneContext().showDialog(
                                       builder: (context) => AlertDialog(
-                                        title: const Text("Bottom Sheet Dialog"),
+                                        title:
+                                            const Text("Bottom Sheet Dialog"),
                                         content: const Text(
                                             "A dialog triggered from a bottom sheet!"),
                                         actions: [
@@ -576,7 +582,8 @@ class _MyHomePageState extends State<MyHomePage>
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.vertical(
                                 top: Radius.circular(20)),
-                            color: Theme.of(context).colorScheme.primaryContainer,
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
                           ),
                           padding: const EdgeInsets.all(20),
                           height: 150,
@@ -682,8 +689,8 @@ class _MyHomePageState extends State<MyHomePage>
                       showTipsOnScreen('OneContext().addOverlay(builder)');
                       String overId = UniqueKey().toString();
                       double getY() => Random()
-                          .nextInt(
-                              (MediaQuery.of(context).size.height - 100).toInt())
+                          .nextInt((MediaQuery.of(context).size.height - 100)
+                              .toInt())
                           .toDouble();
                       double getX() => Random()
                           .nextInt(
@@ -757,7 +764,8 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   const SizedBox(height: 16),
                   const Text('Compare Dialog Methods:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   Row(
                     children: [
                       Expanded(
@@ -794,24 +802,28 @@ class _MyHomePageState extends State<MyHomePage>
                                     builder: (_) => Container(
                                       height: 100,
                                       alignment: Alignment.center,
-                                      child: const Text('Native BS from Native Dialog'),
+                                      child: const Text(
+                                          'Native BS from Native Dialog'),
                                     ),
                                   ),
                                   child: const Text('Native BS'),
                                 ),
                                 TextButton(
-                                  onPressed: () => OneContext().showModalBottomSheet(
+                                  onPressed: () =>
+                                      OneContext().showModalBottomSheet(
                                     builder: (_) => Container(
                                       height: 100,
                                       alignment: Alignment.center,
-                                      child: const Text('OC BS from Native Dialog'),
+                                      child: const Text(
+                                          'OC BS from Native Dialog'),
                                     ),
                                   ),
                                   child: const Text('OC BS'),
                                 ),
                                 TextButton(
                                   onPressed: () => OneContext().push(
-                                    MaterialPageRoute(builder: (_) => SecondPage()),
+                                    MaterialPageRoute(
+                                        builder: (_) => SecondPage()),
                                   ),
                                   child: const Text('Push'),
                                 ),
@@ -831,7 +843,8 @@ class _MyHomePageState extends State<MyHomePage>
                           onPressed: () => OneContext().showDialog(
                             builder: (dlgCtx) => AlertDialog(
                               title: const Text('OneContext Dialog'),
-                              content: const Text('OneContext().showDialog(...)'),
+                              content:
+                                  const Text('OneContext().showDialog(...)'),
                               actions: [
                                 TextButton(
                                   onPressed: () => showDialog(
@@ -858,13 +871,15 @@ class _MyHomePageState extends State<MyHomePage>
                                     builder: (_) => Container(
                                       height: 100,
                                       alignment: Alignment.center,
-                                      child: const Text('Native BS from OC Dialog'),
+                                      child: const Text(
+                                          'Native BS from OC Dialog'),
                                     ),
                                   ),
                                   child: const Text('Native BS'),
                                 ),
                                 TextButton(
-                                  onPressed: () => OneContext().showModalBottomSheet(
+                                  onPressed: () =>
+                                      OneContext().showModalBottomSheet(
                                     builder: (_) => Container(
                                       height: 100,
                                       alignment: Alignment.center,
@@ -875,9 +890,18 @@ class _MyHomePageState extends State<MyHomePage>
                                 ),
                                 TextButton(
                                   onPressed: () => OneContext().push(
-                                    MaterialPageRoute(builder: (_) => SecondPage()),
+                                    MaterialPageRoute(
+                                        builder: (_) => SecondPage()),
                                   ),
                                   child: const Text('Push'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SecondPage()),
+                                  ),
+                                  child: const Text('Native Push'),
                                 ),
                                 TextButton(
                                   onPressed: () => OneContext().popDialog(),
@@ -892,7 +916,8 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   const SizedBox(height: 12),
                   const Text('Compare Bottom Sheet Methods:',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                   Row(
                     children: [
                       Expanded(
@@ -906,7 +931,8 @@ class _MyHomePageState extends State<MyHomePage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Text('Native Bottom Sheet',
-                                      style: TextStyle(fontWeight: FontWeight.bold)),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(height: 8),
                                   Wrap(
                                     spacing: 6,
@@ -917,16 +943,19 @@ class _MyHomePageState extends State<MyHomePage>
                                           context: bsCtx,
                                           builder: (_) => AlertDialog(
                                             title: const Text('Native Dialog'),
-                                            content: const Text('From Native BS'),
+                                            content:
+                                                const Text('From Native BS'),
                                           ),
                                         ),
                                         child: const Text('Native D'),
                                       ),
                                       FilledButton(
-                                        onPressed: () => OneContext().showDialog(
+                                        onPressed: () =>
+                                            OneContext().showDialog(
                                           builder: (_) => AlertDialog(
                                             title: const Text('OC Dialog'),
-                                            content: const Text('From Native BS'),
+                                            content:
+                                                const Text('From Native BS'),
                                           ),
                                         ),
                                         child: const Text('OC D'),
@@ -937,24 +966,28 @@ class _MyHomePageState extends State<MyHomePage>
                                           builder: (_) => Container(
                                             height: 100,
                                             alignment: Alignment.center,
-                                            child: const Text('Native BS from Native BS'),
+                                            child: const Text(
+                                                'Native BS from Native BS'),
                                           ),
                                         ),
                                         child: const Text('Native BS'),
                                       ),
                                       FilledButton(
-                                        onPressed: () => OneContext().showModalBottomSheet(
+                                        onPressed: () =>
+                                            OneContext().showModalBottomSheet(
                                           builder: (_) => Container(
                                             height: 100,
                                             alignment: Alignment.center,
-                                            child: const Text('OC BS from Native BS'),
+                                            child: const Text(
+                                                'OC BS from Native BS'),
                                           ),
                                         ),
                                         child: const Text('OC BS'),
                                       ),
                                       FilledButton(
                                         onPressed: () => OneContext().push(
-                                          MaterialPageRoute(builder: (_) => SecondPage()),
+                                          MaterialPageRoute(
+                                              builder: (_) => SecondPage()),
                                         ),
                                         child: const Text('Push'),
                                       ),
@@ -977,7 +1010,8 @@ class _MyHomePageState extends State<MyHomePage>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Text('OneContext Bottom Sheet',
-                                      style: TextStyle(fontWeight: FontWeight.bold)),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(height: 8),
                                   Wrap(
                                     spacing: 6,
@@ -994,7 +1028,8 @@ class _MyHomePageState extends State<MyHomePage>
                                         child: const Text('Native D'),
                                       ),
                                       FilledButton(
-                                        onPressed: () => OneContext().showDialog(
+                                        onPressed: () =>
+                                            OneContext().showDialog(
                                           builder: (_) => AlertDialog(
                                             title: const Text('OC Dialog'),
                                             content: const Text('From OC BS'),
@@ -1008,24 +1043,28 @@ class _MyHomePageState extends State<MyHomePage>
                                           builder: (_) => Container(
                                             height: 100,
                                             alignment: Alignment.center,
-                                            child: const Text('Native BS from OC BS'),
+                                            child: const Text(
+                                                'Native BS from OC BS'),
                                           ),
                                         ),
                                         child: const Text('Native BS'),
                                       ),
                                       FilledButton(
-                                        onPressed: () => OneContext().showModalBottomSheet(
+                                        onPressed: () =>
+                                            OneContext().showModalBottomSheet(
                                           builder: (_) => Container(
                                             height: 100,
                                             alignment: Alignment.center,
-                                            child: const Text('OC BS from OC BS'),
+                                            child:
+                                                const Text('OC BS from OC BS'),
                                           ),
                                         ),
                                         child: const Text('OC BS'),
                                       ),
                                       FilledButton(
                                         onPressed: () => OneContext().push(
-                                          MaterialPageRoute(builder: (_) => SecondPage()),
+                                          MaterialPageRoute(
+                                              builder: (_) => SecondPage()),
                                         ),
                                         child: const Text('Push'),
                                       ),
@@ -1062,8 +1101,8 @@ class _MyHomePageState extends State<MyHomePage>
                     icon: Icons.route,
                     onPressed: () async {
                       showTipsOnScreen('OneContext().pushNamed("/second")');
-                      String? result = (await OneContext().pushNamed('/second'))
-                          as String?;
+                      String? result =
+                          (await OneContext().pushNamed('/second')) as String?;
                       print('Page returned: $result');
                     },
                   ),
@@ -1107,8 +1146,8 @@ class _MyHomePageState extends State<MyHomePage>
                       );
                       if (picked != null) {
                         OneContext().showSnackBar(
-                            builder: (_) => SnackBar(
-                                content: Text('Selected: $picked')));
+                            builder: (_) =>
+                                SnackBar(content: Text('Selected: $picked')));
                       }
                     },
                   ),
@@ -1187,7 +1226,8 @@ void showTipsOnScreen(String text, {double? size, int? seconds}) {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.red.withValues(alpha: 0.9),
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+            borderRadius:
+                const BorderRadius.vertical(bottom: Radius.circular(16)),
             boxShadow: [
               BoxShadow(
                 blurRadius: 10,
@@ -1288,4 +1328,3 @@ class DialogPage extends StatelessWidget {
         ),
       ));
 }
-

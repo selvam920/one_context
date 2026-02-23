@@ -18,10 +18,12 @@ class OneContextWidget extends StatefulWidget {
 }
 
 class _OneContextWidgetState extends State<OneContextWidget> {
+  final GlobalKey<NavigatorState> _innerNavKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      key: _innerNavKey,
       initialRoute: widget.initialRoute ?? '/',
       observers: [...widget.observers, OneContext().heroController, OneContext().innerObserver],
       onGenerateRoute: (_) => MaterialPageRoute(
