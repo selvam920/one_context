@@ -623,6 +623,14 @@ class _MyHomePageState extends State<MyHomePage>
                                   onPressed: () => OneContext().popDialog(2),
                                   child: const Text('Option 2'),
                                 ),
+                                SimpleDialogOption(
+                                  onPressed: () async {
+                                    await OneContext().popDialog();
+                                    OneContext().push(MaterialPageRoute(
+                                        builder: (_) => SecondPage()));
+                                  },
+                                  child: const Text('Open Second Page'),
+                                ),
                               ],
                             );
                           });
