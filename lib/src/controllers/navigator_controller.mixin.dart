@@ -78,15 +78,6 @@ mixin NavigatorController {
   Future<T?> push<T extends Object?>(Route<T> route) =>
       _activeNav!.push<T>(route);
 
-  ///  Show general dialog.
-  Future<T?> showGeneralDialog<T extends Object?>(Widget page) =>
-      _activeNav!.push<T>(DialogRoute(
-        context: context!,
-        builder: (BuildContext context) {
-          return page;
-        },
-      ));
-
   /// Whether the navigator can be popped.
   bool canPop() => _activeNav!.canPop();
 
