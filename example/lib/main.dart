@@ -856,7 +856,7 @@ class _MyHomePageState extends State<MyHomePage>
                               actions: [
                                 TextButton(
                                   onPressed: () => showDialog(
-                                    context: dlgCtx!,
+                                    context: dlgCtx,
                                     builder: (_) => AlertDialog(
                                       title: const Text('Native Dialog'),
                                       content: const Text('From OC Dialog'),
@@ -875,7 +875,7 @@ class _MyHomePageState extends State<MyHomePage>
                                 ),
                                 TextButton(
                                   onPressed: () => showModalBottomSheet(
-                                    context: dlgCtx!,
+                                    context: dlgCtx,
                                     builder: (_) => Container(
                                       height: 100,
                                       alignment: Alignment.center,
@@ -1027,7 +1027,7 @@ class _MyHomePageState extends State<MyHomePage>
                                     children: [
                                       FilledButton(
                                         onPressed: () => showDialog(
-                                          context: bsCtx!,
+                                          context: bsCtx,
                                           builder: (_) => AlertDialog(
                                             title: const Text('Native Dialog'),
                                             content: const Text('From OC BS'),
@@ -1047,7 +1047,7 @@ class _MyHomePageState extends State<MyHomePage>
                                       ),
                                       FilledButton(
                                         onPressed: () => showModalBottomSheet(
-                                          context: bsCtx!,
+                                          context: bsCtx,
                                           builder: (_) => Container(
                                             height: 100,
                                             alignment: Alignment.center,
@@ -1102,6 +1102,14 @@ class _MyHomePageState extends State<MyHomePage>
                       String? result = await OneContext().push<String>(
                           MaterialPageRoute(builder: (_) => SecondPage()));
                       print('Page returned: $result');
+                    },
+                  ),
+                       ActionButton(
+                    label: 'Native Push Second Page',
+                    icon: Icons.arrow_forward_ios,
+                    onPressed: () async {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => SecondPage()));
                     },
                   ),
                   ActionButton(
