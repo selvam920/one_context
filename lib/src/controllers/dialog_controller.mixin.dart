@@ -63,13 +63,13 @@ mixin DialogController {
   }) async {
     if (!(await _scaffoldContextLoaded())) return null;
 
-    Widget dialog = builder(_scaffoldContext!);
-    addDialogVisible(dialog);
+    Widget dialogMarker = Container();
+    addDialogVisible(dialogMarker);
 
     return mat
         .showDialog<T>(
           context: _scaffoldContext!,
-          builder: (_) => dialog,
+          builder: builder,
           barrierDismissible: barrierDismissible ?? true,
           useRootNavigator: useRootNavigator,
           barrierColor: barrierColor,
@@ -79,7 +79,7 @@ mixin DialogController {
           anchorPoint: anchorPoint,
           traversalEdgeBehavior: traversalEdgeBehavior,
         )
-        .whenComplete(() => removeDialogVisible(widget: dialog));
+        .whenComplete(() => removeDialogVisible(widget: dialogMarker));
   }
 
   /// Removes the current [SnackBar] by running its normal exit animation.
@@ -309,13 +309,13 @@ mixin DialogController {
   }) async {
     if (!(await _scaffoldContextLoaded())) return null;
 
-    Widget dialog = builder(_scaffoldContext!);
-    addDialogVisible(dialog);
+    Widget dialogMarker = Container();
+    addDialogVisible(dialogMarker);
 
     return mat
         .showModalBottomSheet<T>(
           context: _scaffoldContext!,
-          builder: (_) => dialog,
+          builder: builder,
           backgroundColor: backgroundColor,
           clipBehavior: clipBehavior,
           elevation: elevation,
@@ -332,7 +332,7 @@ mixin DialogController {
           showDragHandle: showDragHandle,
           useSafeArea: useSafeArea,
         )
-        .whenComplete(() => removeDialogVisible(widget: dialog));
+        .whenComplete(() => removeDialogVisible(widget: dialogMarker));
   }
 
   /// Shows a persistent bottom sheet
@@ -348,11 +348,11 @@ mixin DialogController {
   }) async {
     if (!(await _scaffoldContextLoaded())) return null;
 
-    Widget dialog = builder(_scaffoldContext!);
-    addDialogVisible(dialog);
+    Widget dialogMarker = Container();
+    addDialogVisible(dialogMarker);
 
     return _scaffoldState!.showBottomSheet(
-      (_) => dialog,
+      builder,
       backgroundColor: backgroundColor,
       elevation: elevation,
       shape: shape,
@@ -360,7 +360,7 @@ mixin DialogController {
       constraints: constraints,
       enableDrag: enableDrag,
       transitionAnimationController: transitionAnimationController,
-    )..closed.whenComplete(() => removeDialogVisible(widget: dialog));
+    )..closed.whenComplete(() => removeDialogVisible(widget: dialogMarker));
   }
 
   /// Pop the top-most dialog off the OneContext.dialog.

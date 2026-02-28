@@ -524,6 +524,51 @@ class _MyHomePageState extends State<MyHomePage>
                       print(result);
                     },
                   ),
+                   ActionButton(
+                    label: 'Show Default Dialog with widget builder',
+                    icon: Icons.chat_bubble_outline,
+                    onPressed: () async {
+                      showTipsOnScreen('OneContext().showDialog<String>()');
+
+                      var result = await OneContext().showDialog<String>(
+                          barrierColor:
+                              Colors.deepPurple.withValues(alpha: 0.3),
+                          builder: (context) => Material(
+                            child: Column(children: [
+                                  
+                                    TextButton(
+                                        child: const Text("Show Bottom Sheet"),
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => Container(
+                                              padding: const EdgeInsets.all(24),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                      "I'm a bottom sheet shown from a dialog!"),
+                                                  const SizedBox(height: 16),
+                                                  FilledButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context).pop(),
+                                                    child: const Text("Close"),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                    TextButton(
+                                        child: const Text("OK"),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop()),
+                                  ],
+                                ),
+                          ));
+                      print(result);
+                    },
+                  ),
                   ActionButton(
                     label: 'Show Modal Bottom Sheet',
                     icon: Icons.keyboard_arrow_up,
