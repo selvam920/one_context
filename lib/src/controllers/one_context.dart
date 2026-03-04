@@ -165,22 +165,7 @@ class _OneContextBackObserver extends WidgetsBindingObserver {
   /// when no observer handled the gesture start.
   @override
   Future<bool> didPopRoute() async {
-    // 1. If any OneContext-tracked dialog is visible, pop it from Nav-Inner
-    if (OneContext().hasDialogVisible) {
-      final scaffoldContext = OneContext().scaffoldKey.currentContext;
-      if (scaffoldContext != null && scaffoldContext.mounted) {
-        final innerNav = Navigator.of(scaffoldContext);
-        if (innerNav.canPop()) {
-          innerNav.pop();
-        } else {
-          Navigator.of(scaffoldContext, rootNavigator: true).pop();
-        }
-        return true;
-      }
-    }
-
-    // 2. Check if Nav-Inner has any untracked routes to pop
-    //    (e.g. standard Flutter showDatePicker, showDialog called directly)
+    // 1. Check if Nav-Inner has any routes to pop (legacy/direct usage)
     final scaffoldContext = OneContext().scaffoldKey.currentContext;
     if (scaffoldContext != null && scaffoldContext.mounted) {
       final innerNav = Navigator.of(scaffoldContext);
@@ -189,7 +174,7 @@ class _OneContextBackObserver extends WidgetsBindingObserver {
       }
     }
 
-    // 3. No dialog on Nav-Inner - forward to Nav-App (Root Navigator)
+    // 2. Delegate to Nav-App — handles dialogs and pages via standard Flutter flow
     //    This triggers PopScope.onPopInvokedWithResult if present on the current route.
     final rootNav = OneContext().key.currentState;
     if (rootNav != null) {

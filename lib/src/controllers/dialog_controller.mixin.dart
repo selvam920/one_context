@@ -19,6 +19,23 @@ mixin DialogController {
   BuildContext? get _scaffoldContext => _scaffoldKey?.currentContext;
   ScaffoldState? get _scaffoldState => _scaffoldKey?.currentState;
 
+  /// Context of Nav-App (MaterialApp navigator). Dialogs and modal bottom
+  /// sheets are pushed here so that [Navigator.of(context).pop()] from page
+  /// contexts correctly closes the dialog instead of the page.
+  BuildContext? get _navAppContext => OneContext().key.currentContext;
+
+  /// Checks that the Nav-App context is available and mounted.
+  Future<bool> _navAppContextLoaded() async {
+    await Future.delayed(Duration.zero);
+    final ctx = _navAppContext;
+    final isNull = ctx == null;
+    final isMounted = ctx?.mounted ?? false;
+    if (isNull || !isMounted) {
+      throw NO_CONTEXT_ERROR;
+    }
+    return true;
+  }
+
   ValueNotifier<List<Widget>> _dialogs = ValueNotifier([]);
   ValueNotifier<List<Widget>> get dialogNotifier => _dialogs;
   bool get hasDialogVisible => _dialogs.value.length > 0;
@@ -52,7 +69,7 @@ mixin DialogController {
   /// barrier behavior (dialog is dismissible with a tap on the barrier).
   Future<T?> showDialog<T>({
     required Widget Function(BuildContext) builder,
-    bool useRootNavigator = true,
+    bool useRootNavigator = false,
     String? barrierLabel,
     RouteSettings? routeSettings,
     Offset? anchorPoint,
@@ -61,14 +78,14 @@ mixin DialogController {
     bool useSafeArea = true,
     TraversalEdgeBehavior? traversalEdgeBehavior,
   }) async {
-    if (!(await _scaffoldContextLoaded())) return null;
+    if (!(await _navAppContextLoaded())) return null;
 
     Widget dialogMarker = Container();
     addDialogVisible(dialogMarker);
 
     return mat
         .showDialog<T>(
-          context: _scaffoldContext!,
+          context: _navAppContext!,
           builder: builder,
           barrierDismissible: barrierDismissible ?? true,
           useRootNavigator: useRootNavigator,
@@ -137,14 +154,14 @@ mixin DialogController {
     final String? barrierLabel,
     final bool barrierDismissible = true,
   }) async {
-    if (!(await _scaffoldContextLoaded())) return null;
+    if (!(await _navAppContextLoaded())) return null;
 
     Widget dialog = Container();
     addDialogVisible(dialog);
 
     return mat
         .showDatePicker(
-          context: _scaffoldContext!,
+          context: _navAppContext!,
           initialDate: initialDate,
           firstDate: firstDate,
           lastDate: lastDate,
@@ -192,14 +209,14 @@ mixin DialogController {
     final String? barrierLabel,
     final bool barrierDismissible = true,
   }) async {
-    if (!(await _scaffoldContextLoaded())) return null;
+    if (!(await _navAppContextLoaded())) return null;
 
     Widget dialog = Container();
     addDialogVisible(dialog);
 
     return mat
         .showTimePicker(
-          context: _scaffoldContext!,
+          context: _navAppContext!,
           initialTime: initialTime,
           builder: builder,
           useRootNavigator: useRootNavigator,
@@ -248,14 +265,14 @@ mixin DialogController {
     final String? barrierLabel,
     final bool barrierDismissible = true,
   }) async {
-    if (!(await _scaffoldContextLoaded())) return null;
+    if (!(await _navAppContextLoaded())) return null;
 
     Widget dialog = Container();
     addDialogVisible(dialog);
 
     return mat
         .showDateRangePicker(
-          context: _scaffoldContext!,
+          context: _navAppContext!,
           initialDateRange: initialDateRange,
           firstDate: firstDate,
           lastDate: lastDate,
@@ -307,14 +324,14 @@ mixin DialogController {
     bool? showDragHandle,
     bool useSafeArea = false,
   }) async {
-    if (!(await _scaffoldContextLoaded())) return null;
+    if (!(await _navAppContextLoaded())) return null;
 
     Widget dialogMarker = Container();
     addDialogVisible(dialogMarker);
 
     return mat
         .showModalBottomSheet<T>(
-          context: _scaffoldContext!,
+          context: _navAppContext!,
           builder: builder,
           backgroundColor: backgroundColor,
           clipBehavior: clipBehavior,
@@ -369,14 +386,17 @@ mixin DialogController {
   /// (e.g. a modal bottom sheet), it pops from there. Otherwise, it pops
   /// from the root navigator (e.g. a dialog shown with useRootNavigator: true).
   popDialog<T extends Object>([T? result]) async {
-    if ((await _scaffoldContextLoaded())) {
-      if (OneContext().hasDialogVisible) {
+    if (OneContext().hasDialogVisible) {
+      // Dialogs are pushed onto Nav-App — pop from there first
+      final navApp = OneContext().key.currentState;
+      if (navApp != null && navApp.canPop()) {
+        return navApp.pop<T>(result);
+      }
+      // Fallback: try Nav-Inner (persistent bottom sheets, legacy)
+      if (_scaffoldContext != null && _scaffoldContext!.mounted) {
         final innerNav = Navigator.of(_scaffoldContext!);
         if (innerNav.canPop()) {
           return innerNav.pop<T>(result);
-        } else {
-          return Navigator.of(_scaffoldContext!, rootNavigator: true)
-              .pop<T>(result);
         }
       }
     }

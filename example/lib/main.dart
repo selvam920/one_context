@@ -637,6 +637,26 @@ class _MyHomePageState extends State<MyHomePage>
                       print('User selected: $selected');
                     },
                   ),
+                  ActionButton(
+                    label: 'Dialog with Callback Pop',
+                    icon: Icons.phone_callback,
+                    onPressed: () async {
+                      showTipsOnScreen(
+                          'Navigator.of(context).pop() inside callback');
+                           var widget =DialogContentPage(
+                            onClose: (message) {
+                              Navigator.of(context).pop(message);
+                            },
+                          );
+                      var result = await OneContext().showDialog<String>(
+                          barrierDismissible: true,
+                        builder: (context) => Material(
+                          child: widget
+                        ),
+                      );
+                      print('Dialog result: $result');
+                    },
+                  ),
                 ],
               ),
 
@@ -1343,4 +1363,38 @@ class DialogPage extends StatelessWidget {
           ),
         ),
       ));
+}
+
+class DialogContentPage extends StatelessWidget {
+  final void Function(String message) onClose;
+
+  const DialogContentPage({required this.onClose, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Dialog Content Page',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'This dialog passes a callback to a child widget.\n'
+            'The close button calls the callback, which uses\n'
+            'Navigator.of(context).pop() to close the dialog.',
+          ),
+          const SizedBox(height: 24),
+          FilledButton.icon(
+            onPressed: () => onClose('closed via callback'),
+            icon: const Icon(Icons.close),
+            label: const Text('Close via Callback'),
+          ),
+        ],
+      ),
+    );
+  }
 }
