@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as mat;
+import 'package:material_ui/material_ui.dart';
+import 'package:material_ui/material_ui.dart' as mat;
 import 'package:one_context/src/controllers/one_context.dart';
 
 typedef Widget DialogBuilder(BuildContext context);

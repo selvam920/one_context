@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:one_context/src/components/one_basic_widget.dart';
 
 typedef Widget OnePlatformBuilder();
